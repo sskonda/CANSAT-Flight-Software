@@ -21,16 +21,47 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import random
 import os
+import math
+
+# Constants for simulation
+g = 9.81  # Gravitational acceleration in m/s^2
+terminal_velocity = 50  # Estimated terminal velocity for a 1.5kg satellite in m/s (typical for small objects in free fall)
+temperature_at_sea_level = 25  # Average temperature at sea level in Celsius
+temperature_lapse_rate = 0.0065  # Temperature decrease per meter of ascent (in Celsius per meter)
 
 # Generate test CSV data if not already present
 def generate_test_csv(csv_path):
     if not os.path.exists(csv_path):
         with open(csv_path, 'w') as f:
             f.write("Time,Altitude,Airspeed,Temperature,Battery,Latitude,Longitude\n")
+            initial_altitude = 800  # Start at 800 meters
             for t in range(100):
-                f.write(f"{t},{random.randint(100, 1000)},{random.uniform(0, 30):.2f},"
-                        f"{random.uniform(-10, 40):.2f},{random.uniform(3.5, 4.2):.2f},"
-                        f"{random.uniform(-90, 90):.6f},{random.uniform(-180, 180):.6f}\n")
+                # Altitude decreases over time (linear fall for simplicity, could be adjusted for more realism)
+                altitude = max(0, initial_altitude - (initial_altitude / 100) * t)
+
+                # Airspeed increases until terminal velocity is reached
+                airspeed = min(terminal_velocity, g * t)
+
+                # Temperature decreases with altitude (simplified model)
+                temperature = temperature_at_sea_level - temperature_lapse_rate * altitude
+
+                # Battery decreases slowly (linear model for simplicity)
+                battery = max(3.5, 4.2 - 0.007 * t)  # Starts at 4.2V and decreases by 0.007V per second
+
+                # Random Latitude and Longitude within a reasonable range (simulation purposes)
+                latitude = random.uniform(-90, 90)
+                longitude = random.uniform(-180, 180)
+
+                f.write(f"{t},{altitude:.2f},{airspeed:.2f},{temperature:.2f},{battery:.2f},{latitude:.6f},{longitude:.6f}\n")
+
+# def generate_test_csv(csv_path):
+#     if not os.path.exists(csv_path):
+#         with open(csv_path, 'w') as f:
+#             f.write("Time,Altitude,Airspeed,Temperature,Battery,Latitude,Longitude\n")
+#             for t in range(100):
+#                 f.write(f"{t},{random.randint(100, 1000)},{random.uniform(0, 30):.2f},"
+#                         f"{random.uniform(-10, 40):.2f},{random.uniform(3.5, 4.2):.2f},"
+#                         f"{random.uniform(-90, 90):.6f},{random.uniform(-180, 180):.6f}\n")
 
 # Function to draw matplotlib graphs onto a PySimpleGUI canvas
 def draw_figure(canvas, figure):
