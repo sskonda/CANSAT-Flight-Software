@@ -7,6 +7,7 @@
 # Matthew Lee 
 # Alex Segelnick
 # Dylan Manauasa
+# Sanat Konda
 
 import pandas as pd
 import PySimpleGUI as sg
