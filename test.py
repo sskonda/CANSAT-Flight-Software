@@ -124,9 +124,10 @@ def main(csv_file_path):
     # GUI layout
     layout = [
         [sg.Text("CanSat Test GUI", font=('Helvetica', 16), justification='center', expand_x=True)],
-        [sg.Canvas(key='-ALT_CANVAS-'), sg.Canvas(key='-ASP_CANVAS-')],
-        [sg.Canvas(key='-TEMP_CANVAS-'), sg.Canvas(key='-BATT_CANVAS-')],
-        [sg.Canvas(key='-LAT_CANVAS-'), sg.Canvas(key='-LON_CANVAS-')],
+        [sg.Canvas(key='-ALT_CANVAS-', size=(500, 300)), sg.Canvas(key='-ASP_CANVAS-', size=(500, 300)),
+          sg.Canvas(key='-TEMP_CANVAS-', size=(500, 300))], 
+        [sg.Canvas(key='-BATT_CANVAS-', size=(500, 300)), sg.Canvas(key='-LAT_CANVAS-', size=(500, 300)),
+          sg.Canvas(key='-LON_CANVAS-', size=(500, 300))],
         [sg.Text("Battery Voltage:", size=(15, 1)), sg.Text(f"{df['Battery'].iloc[-1]:.2f} V", key='-BATTERY-')],
         [sg.Text("Latitude:", size=(15, 1)), sg.Text(f"{df['Latitude'].iloc[-1]:.6f}", key='-LATITUDE-')],
         [sg.Text("Longitude:", size=(15, 1)), sg.Text(f"{df['Longitude'].iloc[-1]:.6f}", key='-LONGITUDE-')],
