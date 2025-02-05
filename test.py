@@ -79,47 +79,53 @@ def main(csv_file_path):
     df = pd.read_csv(csv_file_path)
 
     # Create Matplotlib figures for graphs
-    fig_alt, ax_alt = plt.subplots(figsize=(5, 3))
+    fig_alt, ax_alt = plt.subplots(figsize=(4, 3))
     ax_alt.plot(df['Time'], df['Altitude'], label="Altitude (m)", color="blue")
     ax_alt.set_title("Altitude vs Time")
     ax_alt.set_xlabel("Time (s)")
     ax_alt.set_ylabel("Altitude (m)")
     ax_alt.legend()
+    fig_alt.tight_layout()
 
-    fig_aspd, ax_aspd = plt.subplots(figsize=(5, 3))
+    fig_aspd, ax_aspd = plt.subplots(figsize=(4, 3))
     ax_aspd.plot(df['Time'], df['Airspeed'], label="Airspeed (m/s)", color="green")
     ax_aspd.set_title("Airspeed vs Time")
     ax_aspd.set_xlabel("Time (s)")
     ax_aspd.set_ylabel("Airspeed (m/s)")
     ax_aspd.legend()
+    fig_aspd.tight_layout()
 
-    fig_temp, ax_temp = plt.subplots(figsize=(5, 3))
+    fig_temp, ax_temp = plt.subplots(figsize=(4, 3))
     ax_temp.plot(df['Time'], df['Temperature'], label="Temperature (°C)", color="red")
     ax_temp.set_title("Temperature vs Time")
     ax_temp.set_xlabel("Time (s)")
     ax_temp.set_ylabel("Temperature (°C)")
     ax_temp.legend()
+    fig_temp.tight_layout()
 
-    fig_batt, ax_batt = plt.subplots(figsize=(5, 3))
+    fig_batt, ax_batt = plt.subplots(figsize=(4, 3))
     ax_batt.plot(df['Time'], df['Battery'], label="Battery Voltage (V)", color="orange")
     ax_batt.set_title("Battery Voltage vs Time")
     ax_batt.set_xlabel("Time (s)")
     ax_batt.set_ylabel("Battery Voltage (V)")
     ax_batt.legend()
+    fig_batt.tight_layout()
 
-    fig_lat, ax_lat = plt.subplots(figsize=(5, 3))
+    fig_lat, ax_lat = plt.subplots(figsize=(4, 3))
     ax_lat.plot(df['Time'], df['Latitude'], label="Latitude", color="purple")
     ax_lat.set_title("Latitude vs Time")
     ax_lat.set_xlabel("Time (s)")
     ax_lat.set_ylabel("Latitude")
     ax_lat.legend()
+    fig_lat.tight_layout()
 
-    fig_lon, ax_lon = plt.subplots(figsize=(5, 3))
+    fig_lon, ax_lon = plt.subplots(figsize=(4, 3))
     ax_lon.plot(df['Time'], df['Longitude'], label="Longitude", color="brown")
     ax_lon.set_title("Longitude vs Time")
     ax_lon.set_xlabel("Time (s)")
     ax_lon.set_ylabel("Longitude")
     ax_lon.legend()
+    fig_lon.tight_layout()
 
     # GUI layout
     layout = [
@@ -127,7 +133,7 @@ def main(csv_file_path):
         [sg.Canvas(key='-ALT_CANVAS-', size=(500, 300)), sg.Canvas(key='-ASP_CANVAS-', size=(500, 300)),
           sg.Canvas(key='-TEMP_CANVAS-', size=(500, 300))], 
         [sg.Canvas(key='-BATT_CANVAS-', size=(500, 300)), sg.Canvas(key='-LAT_CANVAS-', size=(500, 300)),
-          sg.Canvas(key='-LON_CANVAS-', size=(500, 300))],
+         sg.Canvas(key='-LON_CANVAS-', size=(500, 300))],
         [sg.Text("Battery Voltage:", size=(15, 1)), sg.Text(f"{df['Battery'].iloc[-1]:.2f} V", key='-BATTERY-')],
         [sg.Text("Latitude:", size=(15, 1)), sg.Text(f"{df['Latitude'].iloc[-1]:.6f}", key='-LATITUDE-')],
         [sg.Text("Longitude:", size=(15, 1)), sg.Text(f"{df['Longitude'].iloc[-1]:.6f}", key='-LONGITUDE-')],
