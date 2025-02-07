@@ -28,12 +28,17 @@ g = 9.81  # Gravitational acceleration in m/s^2
 terminal_velocity = 50  # Estimated terminal velocity for a 1.5kg satellite in m/s (typical for small objects in free fall)
 temperature_at_sea_level = 25  # Average temperature at sea level in Celsius
 temperature_lapse_rate = 0.0065  # Temperature decrease per meter of ascent (in Celsius per meter)
+pressure_at_sea_level = 101325 # Pressure in Pascals at sea level
+M = 0.0289644 # Molar mass of Earth's air in kg/mol
+R = 8.314 # Universal gas constant in J/(mol*K)
+
+
 
 # Generate test CSV data if not already present
 def generate_test_csv(csv_path):
     if not os.path.exists(csv_path):
         with open(csv_path, 'w') as f:
-            f.write("Time,Altitude,Airspeed,Temperature,Battery,Latitude,Longitude\n")
+            f.write("Time,Altitude,Airspeed,Temperature,Battery,Latitude,Longitude,Pressure\n")
             initial_altitude = 800  # Start at 800 meters
             for t in range(100):
                 # Altitude decreases over time (linear fall for simplicity, could be adjusted for more realism)
@@ -52,7 +57,10 @@ def generate_test_csv(csv_path):
                 latitude = random.uniform(-90, 90)
                 longitude = random.uniform(-180, 180)
 
-                f.write(f"{t},{altitude:.2f},{airspeed:.2f},{temperature:.2f},{battery:.2f},{latitude:.6f},{longitude:.6f}\n")
+                pressure = pressure_at_sea_level*math.exp(-M*g*altitude / (R*(temperature+273.15)))
+                
+
+                f.write(f"{t},{altitude:.2f},{airspeed:.2f},{temperature:.2f},{battery:.2f},{latitude:.6f},{longitude:.6f},{pressure:.2f}\n")
 
 # def generate_test_csv(csv_path):
 #     if not os.path.exists(csv_path):
@@ -127,16 +135,27 @@ def main(csv_file_path):
     ax_lon.legend()
     fig_lon.tight_layout()
 
+    fig_pres, ax_pres = plt.subplots(figsize=(4, 3))
+    ax_pres.plot(df['Time'], df['Pressure'], label="Pressure", color="indigo")
+    ax_pres.set_title("Pressure vs Time")
+    ax_pres.set_xlabel("Time (s)")
+    ax_pres.set_ylabel("Pressure")
+    ax_pres.legend()
+    fig_pres.tight_layout()
+
+
     # GUI layout
     layout = [
         [sg.Text("CanSat Test GUI", font=('Helvetica', 16), justification='center', expand_x=True)],
-        [sg.Canvas(key='-ALT_CANVAS-', size=(500, 300)), sg.Canvas(key='-ASP_CANVAS-', size=(500, 300)),
-          sg.Canvas(key='-TEMP_CANVAS-', size=(500, 300))], 
-        [sg.Canvas(key='-BATT_CANVAS-', size=(500, 300)), sg.Canvas(key='-LAT_CANVAS-', size=(500, 300)),
-         sg.Canvas(key='-LON_CANVAS-', size=(500, 300))],
+        [sg.Canvas(key='-ALT_CANVAS-', size=(400, 250)), sg.Canvas(key='-ASP_CANVAS-', size=(400, 250)),
+          sg.Canvas(key='-TEMP_CANVAS-', size=(400, 250))], 
+        [sg.Canvas(key='-BATT_CANVAS-', size=(400, 250)), sg.Canvas(key='-LAT_CANVAS-', size=(400, 250)),
+         sg.Canvas(key='-LON_CANVAS-', size=(400, 250))],
+        [sg.Canvas(key='-PRES_CANVAS-', size=(400, 250))],
         [sg.Text("Battery Voltage:", size=(15, 1)), sg.Text(f"{df['Battery'].iloc[-1]:.2f} V", key='-BATTERY-')],
         [sg.Text("Latitude:", size=(15, 1)), sg.Text(f"{df['Latitude'].iloc[-1]:.6f}", key='-LATITUDE-')],
         [sg.Text("Longitude:", size=(15, 1)), sg.Text(f"{df['Longitude'].iloc[-1]:.6f}", key='-LONGITUDE-')],
+        [sg.Text("Pressure:", size=(15, 1)), sg.Text(f"{df['Pressure'].iloc[-1]:.6f}", key='-PRESSURE-')],
         [sg.Button("Exit", size=(10, 1))]
     ]
 
@@ -150,6 +169,7 @@ def main(csv_file_path):
     draw_figure(window['-BATT_CANVAS-'].Widget, fig_batt)
     draw_figure(window['-LAT_CANVAS-'].Widget, fig_lat)
     draw_figure(window['-LON_CANVAS-'].Widget, fig_lon)
+    draw_figure(window['-PRES_CANVAS-'].Widget, fig_pres)
 
     # Event loop
     while True:
