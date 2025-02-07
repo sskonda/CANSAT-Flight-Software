@@ -145,7 +145,7 @@ def main(csv_file_path):
 
 
     # GUI layout
-    layout = [
+    graph_column = sg.Column([
         [sg.Text("CanSat Test GUI", font=('Helvetica', 16), justification='center', expand_x=True)],
         [sg.Canvas(key='-ALT_CANVAS-', size=(400, 250)), sg.Canvas(key='-ASP_CANVAS-', size=(400, 250)),
           sg.Canvas(key='-TEMP_CANVAS-', size=(400, 250))], 
@@ -157,10 +157,19 @@ def main(csv_file_path):
         [sg.Text("Longitude:", size=(15, 1)), sg.Text(f"{df['Longitude'].iloc[-1]:.6f}", key='-LONGITUDE-')],
         [sg.Text("Pressure:", size=(15, 1)), sg.Text(f"{df['Pressure'].iloc[-1]:.6f}", key='-PRESSURE-')],
         [sg.Button("Exit", size=(10, 1))]
+    ], 
+    scrollable = True,
+    vertical_scroll_only = True,
+    size = (3000,2400)
+    )
+
+    layout = [
+        [sg.Text("CanSat Test GUI", font=('Helvetica', 16), justification='center', expand_x=True)],
+        [sg.Column([[graph_column]], size=(3000,2400), scrollable=True, vertical_scroll_only=True)]
     ]
 
     # Create the PySimpleGUI window
-    window = sg.Window("CanSat GUI", layout, finalize=True)
+    window = sg.Window("CanSat GUI", layout, resizable=True, finalize=True)
 
     # Embed Matplotlib figures in the PySimpleGUI window
     draw_figure(window['-ALT_CANVAS-'].Widget, fig_alt)
