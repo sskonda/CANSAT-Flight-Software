@@ -146,7 +146,6 @@ def main(csv_file_path):
 
     # GUI layout
     graph_column = sg.Column([
-        [sg.Text("CanSat Test GUI", font=('Helvetica', 16), justification='center', expand_x=True)],
         [sg.Canvas(key='-ALT_CANVAS-', size=(400, 250)), sg.Canvas(key='-ASP_CANVAS-', size=(400, 250)),
           sg.Canvas(key='-TEMP_CANVAS-', size=(400, 250))], 
         [sg.Canvas(key='-BATT_CANVAS-', size=(400, 250)), sg.Canvas(key='-LAT_CANVAS-', size=(400, 250)),
